@@ -1,0 +1,9 @@
+mysql:
+  DbUser: root
+  DbPassword: 74110
+  DbHost: localhost
+  DbPort: 3306
+  DbName: todolist
+
+router:
+  HttpPort: 8080
