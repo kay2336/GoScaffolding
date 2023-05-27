@@ -3,6 +3,7 @@ package service
 import (
 	"awesomeProject/dao"
 	"awesomeProject/model/table"
+	"awesomeProject/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -24,11 +25,13 @@ func (serv *UserServ) Register(c *gin.Context, user *table.User) (err error) {
 	//user, err := userDao.FindUserByPhone(registerUserForm.Phone)
 
 	// bcrypt密码加密存储
-	//if err = u.SetPassword(req.Password); err != nil {
-	//	util.LogrusObj.Info(err)
-	//	return
-	//}
+	hashedPwd, err := utils.HashPwd(user.Password)
+	if err != nil {
+		log.Println("hash pwd error")
+		return
+	}
 
+	user.Password = hashedPwd
 	if err = userDao.Register(user); err != nil {
 		log.Println(err)
 		return
@@ -58,14 +61,14 @@ func (serv *UserServ) Login(c *gin.Context, user *table.User) (err error) {
 	// 校验手机号和密码是否正确
 	//if !user.CheckPassword(req.Password) {
 	//	err = errors.New("账号/密码错误")
-	//	util.LogrusObj.Info(err)
+	//	utils.LogrusObj.Info(err)
 	//	return
 	//}
 
 	// 获取token
-	//token, err := util.GenerateToken(user.ID, req.UserName, 0)
+	//token, err := utils.GenerateToken(user.ID, req.UserName, 0)
 	//if err != nil {
-	//	util.LogrusObj.Info(err)
+	//	utils.LogrusObj.Info(err)
 	//	return
 	//}
 
