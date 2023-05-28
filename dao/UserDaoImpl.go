@@ -23,7 +23,6 @@ func NewUserDao() *UserDao {
 // Register
 // 新增用户至mysql
 func (dao *UserDao) Register(user *table.User) (err error) {
-	//log.Println(user, "dao")
 	err = sql.GetMysqlDB().Create(&user).Error
 	return
 }

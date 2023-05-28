@@ -21,9 +21,6 @@ func (serv *UserServ) Register(c *gin.Context, user *table.User) (err error) {
 	// 创建dao层对象，使用dao层方法
 	userDao := dao.NewUserDao()
 
-	// 查询是否有重复账号
-	//user, err := userDao.FindUserByPhone(registerUserForm.Phone)
-
 	// bcrypt密码加密存储
 	hashedPwd, err := utils.HashPwd(user.Password)
 	if err != nil {
@@ -31,13 +28,14 @@ func (serv *UserServ) Register(c *gin.Context, user *table.User) (err error) {
 		return
 	}
 
+	// 向mysql中添加用户
 	user.Password = hashedPwd
 	if err = userDao.Register(user); err != nil {
 		log.Println(err)
 		return
 	}
-	//log.Println(user, "service")
 
+	// 返回response
 	c.JSON(http.StatusOK, gin.H{
 		"data": "serviceRegister OK",
 		"user": user,
@@ -48,22 +46,25 @@ func (serv *UserServ) Register(c *gin.Context, user *table.User) (err error) {
 func (serv *UserServ) Login(c *gin.Context, user *table.User) (err error) {
 	// 创建dao层对象，使用dao层方法
 	userDao := dao.NewUserDao()
-	_, err = userDao.FindUserByPhone(user.Phone)
 
+	// mysql中无此手机号码的用户
+	dbUser, err := userDao.FindUserByPhone(user.Phone)
 	if err == gorm.ErrRecordNotFound {
-		//err = errors.New("用户不存在")
 		c.JSON(http.StatusOK, gin.H{
 			"data": "no phoneNumber",
 		})
 		return
 	}
 
+	//数据库得备一份正确的密码
+
 	// 校验手机号和密码是否正确
-	//if !user.CheckPassword(req.Password) {
-	//	err = errors.New("账号/密码错误")
-	//	utils.LogrusObj.Info(err)
-	//	return
-	//}
+	if !utils.CmpPwd(dbUser.Password, user.Password) {
+		c.JSON(http.StatusOK, gin.H{
+			"data": "密码错误",
+		})
+		return
+	}
 
 	// 获取token
 	//token, err := utils.GenerateToken(user.ID, req.UserName, 0)
@@ -72,9 +73,9 @@ func (serv *UserServ) Login(c *gin.Context, user *table.User) (err error) {
 	//	return
 	//}
 
-	//给api层返回状态信息
-
+	//返回response
 	c.JSON(http.StatusOK, gin.H{
+		"data": "login success",
 		"user": user,
 	})
 	return
