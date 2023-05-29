@@ -56,8 +56,6 @@ func (serv *UserServ) Login(c *gin.Context, user *table.User) (err error) {
 		return
 	}
 
-	//数据库得备一份正确的密码
-
 	// 校验手机号和密码是否正确
 	if !utils.CmpPwd(dbUser.Password, user.Password) {
 		c.JSON(http.StatusOK, gin.H{
@@ -66,17 +64,18 @@ func (serv *UserServ) Login(c *gin.Context, user *table.User) (err error) {
 		return
 	}
 
-	// 获取token
-	//token, err := utils.GenerateToken(user.ID, req.UserName, 0)
-	//if err != nil {
-	//	utils.LogrusObj.Info(err)
-	//	return
-	//}
+	//获取token
+	token, err := utils.GenerateTokenUsingHS256(user.ID, user.Username)
+	if err != nil {
+		utils.LogrusObj.Info(err)
+		return
+	}
 
 	//返回response
 	c.JSON(http.StatusOK, gin.H{
-		"data": "login success",
-		"user": user,
+		"data":  "login success",
+		"token": token,
+		"user":  user,
 	})
 	return
 }
