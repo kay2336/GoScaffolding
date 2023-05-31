@@ -1,5 +1,6 @@
 package e
 
+// 利用map实现状态码对应响应信息
 var MsgFlags = map[int]string{
 	SUCCESS:       "操作成功",
 	ERROR:         "操作失败",
@@ -16,7 +17,8 @@ var MsgFlags = map[int]string{
 	ErrorDatabase:              "数据库操作出错,请重试",
 }
 
-// GetMsg 获取状态码对应信息
+// GetMsg
+// 获取状态码对应信息
 func GetMsg(code int) string {
 	msg, ok := MsgFlags[code]
 	if ok {

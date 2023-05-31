@@ -6,4 +6,4 @@ mysql:
   DbName: todolist
 
 router:
-  HttpPort: 8080
+  HttpPort: 8000

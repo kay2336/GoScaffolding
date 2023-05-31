@@ -65,7 +65,7 @@ func (serv *UserServ) Login(c *gin.Context, user *table.User) (err error) {
 	}
 
 	//获取token
-	token, err := utils.GenerateTokenUsingHS256(user.ID, user.Username)
+	token, err := utils.GenerateTokenUsingHS256(user.ID, user.Username, 0)
 	if err != nil {
 		utils.LogrusObj.Info(err)
 		return

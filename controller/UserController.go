@@ -60,7 +60,6 @@ func Login() gin.HandlerFunc {
 				c.JSON(http.StatusOK, gin.H{
 					"err": "login error",
 				})
-				return
 			}
 		}
 	}
