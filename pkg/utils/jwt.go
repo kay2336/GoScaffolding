@@ -7,7 +7,7 @@ import (
 )
 
 type MyCustomClaims struct {
-	ID        uint   `json:"id"`
+	Id        uint   `json:"id"`
 	Username  string `json:"Username"`
 	Authority int    `json:"authority"`
 	jwt.StandardClaims
@@ -20,11 +20,11 @@ const signKey = "wadaxinoKay"
 // 生成token令牌
 func GenerateTokenUsingHS256(userId uint, username string, authority int) (string, error) {
 	claim := MyCustomClaims{
-		ID:        userId,
+		Id:        userId,
 		Username:  username,
 		Authority: authority,
 		StandardClaims: jwt.StandardClaims{
-			//Id:        RandStr(10),                           // wt ID, 类似于盐值
+			//Id:        RandStr(10),                         // wt ID, 类似于盐值
 			Issuer:    "Evince_s",                            // 签发者
 			Subject:   "User",                                // 签发对象
 			Audience:  "user",                                // 签发受众

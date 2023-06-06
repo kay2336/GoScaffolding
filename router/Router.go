@@ -1,7 +1,7 @@
 package router
 
 import (
-	"awesomeProject/controller"
+	"awesomeProject/api"
 	"awesomeProject/middleware"
 	"awesomeProject/pkg/utils"
 	"github.com/gin-gonic/gin"
@@ -24,16 +24,23 @@ func NewRouter() *gin.Engine {
 		})
 
 		//登陆注册
-		v1.POST("register", controller.Register())
-		v1.POST("login", controller.Login())
+		v1.POST("register", api.Register())
+		v1.POST("login", api.Login())
 
+		//中间件jwt鉴权
 		auth := v1.Group("/auth")
-		auth.Use(middleware.JWT()) //中间件jwt鉴权
+		auth.Use(middleware.JWT())
 		{
 			// 测试中间件jwt
 			auth.GET("ping", func(c *gin.Context) {
 				c.JSON(http.StatusOK, "v1/auth/ping OK")
 			})
+			// CRUD
+			auth.POST("task_create", api.CreateTaskHandler())
+			auth.GET("task_list", api.ListTaskHandler())
+			auth.GET("task_show", api.ShowTaskHandler())
+			auth.POST("task_update", api.UpdateTaskHandler())
+			auth.POST("task_delete", api.DeleteTaskHandler())
 		}
 	}
 

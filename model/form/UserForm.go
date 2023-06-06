@@ -1,4 +1,4 @@
-package user
+package form
 
 type RegisterUserForm struct {
 	Phone      string `varchar(32);comment:"手机号码"`

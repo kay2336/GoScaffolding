@@ -46,8 +46,9 @@ func JWT() gin.HandlerFunc {
 			return
 		}
 
-		// 给请求重新赋值干嘛？？
-		//c.Request = c.Request.WithContext(ctl.NewContext(c.Request.Context(), &ctl.UserInfo{Id: claims.Id}))
+		// 将uid放入请求头中，便于Task的CRUD
+		//log.Println(claims.Id)
+		c.Request = c.Request.WithContext(utils.NewContext(c.Request.Context(), &utils.UserInfo{Id: claims.Id}))
 		c.Next()
 	}
 }

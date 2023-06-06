@@ -61,7 +61,7 @@ func GetMysqlDB() *gorm.DB {
 }
 
 func migration() {
-	err := _db.AutoMigrate(&table.User{})
+	err := _db.AutoMigrate(&table.User{}, &table.Task{})
 	if err != nil {
 		panic(err)
 	}
